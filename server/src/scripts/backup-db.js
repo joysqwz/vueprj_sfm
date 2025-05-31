@@ -17,7 +17,7 @@ if (!fs.existsSync(backupDir)) {
 
 const backupFileName = `backup-dump-${getTimestamp()}.sql`
 const backupFile = path.join(backupDir, backupFileName)
-const containerName = "vueprj_db_1"
+const containerName = "vueprj_sfm_db_1"
 
 try {
 	console.log("[BACKUP] Проверка подключения к базе...")
