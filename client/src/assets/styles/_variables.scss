@@ -1,0 +1,84 @@
+$color-dark: #000000;
+$color-light: #ffffff;
+
+$color-gray-100: #f5f5f5;
+$color-gray-200: #eeeeee;
+$color-gray-300: #dddddd;
+$color-gray-400: #cccccc;
+$color-gray-500: #aaaaaa;
+$color-gray-600: #666666;
+$color-gray-700: #444444;
+$color-gray-800: #222222;
+$color-gray-900: #111111;
+
+$color-blue-100: #e6f0ff;
+$color-blue-200: #b3d1ff;
+$color-blue-300: #80b2ff;
+$color-blue-400: #4d94ff;
+$color-blue-500: #1670ff;
+$color-blue-600: #0f5adb;
+$color-blue-700: #0a45b7;
+$color-blue-800: #063093;
+$color-blue-900: #021a6f;
+
+$color-red-100: #ffe5e5;
+$color-red-200: #ffb3b3;
+$color-red-300: #ff8080;
+$color-red-400: #ff4d4d;
+$color-red-500: #ff0000;
+$color-red-600: #cc0000;
+$color-red-700: #990000;
+$color-red-800: #660000;
+$color-red-900: #330000;
+
+$color-green-100: #e6f7e6;
+$color-green-200: #b3f0b3;
+$color-green-300: #80e680;
+$color-green-400: #4dd64d;
+$color-green-500: #1aad1a;
+$color-green-600: #169b16;
+$color-green-700: #0f7a0f;
+$color-green-800: #0a5b0a;
+$color-green-900: #073707;
+
+$color-yellow-100: #fff9e6;
+$color-yellow-200: #ffecb3;
+$color-yellow-300: #ffe680;
+$color-yellow-400: #ffce09;
+$color-yellow-500: #ffcc00;
+$color-yellow-600: #e6b800;
+$color-yellow-700: #b38f00;
+$color-yellow-800: #806600;
+$color-yellow-900: #4d3d00;
+
+$color-group: $color-blue-200;
+$color-groups: $color-blue-100;
+$color-subject: $color-yellow-200;
+$color-data: $color-gray-100;
+
+$border: 1px solid $color-gray-400;
+$border-light: 1px solid $color-light;
+$border-dark: 1px solid $color-gray-400;
+$border-dark-3: 3px solid $color-gray-400;
+$border-light-3: 3px solid $color-light;
+$border-width-3: 3px;
+$br-8: 8px;
+$br-16: 16px;
+$bs-in-light: inset 0 0 0 3px $color-light;
+$bs-out-light: 0 0 10px 0 $color-light;
+$bs-out-dark: 0 0 10px 0 $color-gray-500;
+$bs-out-normal: 0 0 8px 2px $color-gray-200;
+
+$font-family-base: 'Inter', sans-serif;
+
+$c-width: 1800px;
+$c-width--alt: 1180px;
+$c-padding-x: 30px;
+$c-padding-x--alt: 50px;
+
+$labs-item-width: 225px;
+$labs-item-gap: 10px;
+
+$td-03: 0.3s;
+$td-02: 0.2s;
+$bd-8: 8px;
