@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-export const API_URL = 'https://vueprj-sfmeied.ru//api'
+export const API_URL = 'https://vueprj-sfmeied.ru/api'
 
 const $api = axios.create({
   baseURL: API_URL,
