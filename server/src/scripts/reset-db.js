@@ -5,7 +5,7 @@ import dotenv from "dotenv"
 
 dotenv.config()
 
-const containerName = " vueprj_db_1"
+const containerName = " vueprj_sfm_db_1"
 const backupDir = path.resolve("db_backups")
 if (!fs.existsSync(backupDir)) {
 	fs.mkdirSync(backupDir, { recursive: true })
