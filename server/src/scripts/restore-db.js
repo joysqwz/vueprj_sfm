@@ -11,7 +11,7 @@ if (!dumpFile) {
 }
 
 const absolutePath = path.resolve(dumpFile)
-const containerName = " vueprj_db_1"
+const containerName = " vueprj_sfm_db_1"
 const containerDumpPath = `/tmp/${path.basename(absolutePath)}`
 
 try {
