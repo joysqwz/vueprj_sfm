@@ -249,12 +249,7 @@ class UserService {
 					LEFT JOIN groups g ON s.group_id = g.id
 					WHERE u.id = $1
 				`, [userId])
-
-				if (studentResult.rows.length === 0) {
-					throw ApiError.BadRequest('Пользователь не найден')
-				}
 				const student = studentResult.rows[0]
-
 				const subjectsResult = await pool.query(`
 					SELECT DISTINCT subj.name
 					FROM lab_submissions ls
@@ -264,7 +259,6 @@ class UserService {
 					ORDER BY subj.name
 				`, [userId])
 				const allSubjects = subjectsResult.rows
-
 				const gradesResult = await pool.query(`
 					SELECT subj.name AS subject, ls.grade
 					FROM lab_submissions ls
@@ -307,14 +301,11 @@ class UserService {
 			if (role === 'lecturer') {
 				const lecturerResult = await pool.query(`
 					SELECT u.email, u.role,
-								 l.first_name, l.middle_name, l.last_name
+					l.first_name, l.middle_name, l.last_name
 					FROM users u
 					JOIN lecturers l ON u.id = l.user_id
 					WHERE u.id = $1
 				`, [userId])
-				if (lecturerResult.rows.length === 0) {
-					throw ApiError.BadRequest('Пользователь не найден')
-				}
 				const lecturer = lecturerResult.rows[0]
 				const availableSubjectsResult = await pool.query(`
 					SELECT id, name FROM subjects ORDER BY name
@@ -630,20 +621,15 @@ class UserService {
 				`SELECT id FROM users WHERE id = $1`,
 				[userId]
 			)
-			if (result.rows.length === 0) {
-				throw ApiError.BadRequestError('Пользователь не найден')
-			}
-			await pool.query('BEGIN')
 			await pool.query(
 				`UPDATE tokens SET is_revoked = TRUE WHERE user_id = $1`,
 				[userId]
 			)
-			await pool.query('COMMIT')
 			logger.info(`Все сессии пользователя с id ${userId} завершены.`)
 			return
 		} catch (error) {
-			await pool.query('ROLLBACK')
 			logger.error(`Ошибка при завершении сессий: ${error.message}`)
+			throw ApiError.InternalError()
 		}
 	}
 }
