@@ -203,17 +203,14 @@ class UserService {
 		try {
 			logger.info('Попытка обновления токена')
 			const userData = tokenService.validateRefreshToken(refreshToken)
-			const tokenFromDb = await tokenService.findToken(refreshToken)
 			if (!userData) {
 				throw ApiError.UnauthorizedError()
 			}
+			const tokenFromDb = await tokenService.findToken(refreshToken)
 			if (!tokenFromDb) {
 				return
 			}
 			const userResult = await pool.query('SELECT * FROM users WHERE id = $1', [userData.sub])
-			if (userResult.rows.length === 0) {
-				throw ApiError.UnauthorizedError()
-			}
 			const user = userResult.rows[0]
 			const userDto = new UserDto({
 				...user, unique_id: userData.unique_id, jti: tokenFromDb.id
