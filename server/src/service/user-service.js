@@ -595,18 +595,8 @@ class UserService {
 				)
 			}
 			await pool.query('COMMIT')
-			const updatedGroups = await pool.query(
-				`SELECT g.id, g.name 
-             FROM groups g 
-             JOIN lecturer_groups lg ON g.id = lg.group_id 
-             WHERE lg.lecturer_id = $1`,
-				[userId]
-			)
 			logger.info(`Группы успешно обновлены для пользователя: ${userId}`)
-			return updatedGroups.rows.map(row => ({
-				id: row.id,
-				name: row.name
-			}))
+			return
 		} catch (error) {
 			await pool.query('ROLLBACK')
 			logger.error(`Ошибка при обновлении групп: ${error.message}`)
