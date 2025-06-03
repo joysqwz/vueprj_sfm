@@ -115,13 +115,13 @@ class UserService {
 				code += chars[randomIndex]
 			}
 			const tempToken = tokenService.generateTempToken(userId)
-			mailService.sendNewDeviceCode(email, code)
 			await pool.query(`
 			INSERT INTO temp_tokens (user_id, temp_token, code, expires_at)
 			VALUES ($1, $2, $3, NOW() + INTERVAL '10 minutes')
 			ON CONFLICT (user_id) 
 			DO UPDATE SET temp_token = EXCLUDED.temp_token, code = EXCLUDED.code, expires_at = EXCLUDED.expires_at
 		`, [userId, tempToken, code])
+			mailService.sendNewDeviceCode(email, code)
 			return tempToken
 		} catch (error) {
 			logger.error(`Ошибка при подтверждении нового устройства: ${error.message}`)
