@@ -157,9 +157,6 @@ class UserService {
 		try {
 			logger.info(`Смена пароля для пользователя: ${userId}`)
 			const user = await pool.query('SELECT * FROM users WHERE id = $1', [userId])
-			if (user.rows.length === 0) {
-				throw ApiError.BadRequest('Пользователь не найден')
-			}
 			const isPassValid = await bcrypt.compare(currentPassword, user.rows[0].password)
 			if (!isPassValid) {
 				throw ApiError.BadRequest('Текущий пароль неверный')
