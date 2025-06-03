@@ -436,8 +436,8 @@ class UserService {
 			let index = 1
 			let newPassword = null
 			const currentUser = await pool.query('SELECT role,email FROM users WHERE id = $1', [id])
-			const testRole = currentUser.rows[0].role
-			if (myId != id && testRole == 'admin') {
+			const role = currentUser.rows[0].role
+			if (myId != id && role == 'admin') {
 				throw ApiError.BadRequest('Нельзя изменить данные у admin')
 			}
 			if (userData.resetPassword) {
@@ -462,8 +462,7 @@ class UserService {
 					values
 				)
 			}
-			const effectiveRole = currentUser.rows[0].role
-			if (effectiveRole === 'lecturer') {
+			if (role === 'lecturer') {
 				const lecturerUpdates = []
 				const lecturerValues = []
 				let lecturerIndex = 1
@@ -487,7 +486,7 @@ class UserService {
 					)
 				}
 			}
-			else if (effectiveRole === 'student') {
+			else if (role === 'student') {
 				const studentUpdates = []
 				const studentValues = []
 				let studentIndex = 1
