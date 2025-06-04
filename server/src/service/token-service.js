@@ -73,7 +73,7 @@ class TokenService {
 
 	async saveToken(uid, userId, refreshToken, ipAddress, userAgent, jti) {
 		try {
-			const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
+			const expiresAt = new Date(Date.now() + tokenConfig.JWT_REFRESH * 24 * 60 * 60 * 1000)
 			const result = await pool.query(
 				`SELECT * FROM tokens WHERE user_id = $1 AND unique_id = $2`,
 				[userId, uid]
