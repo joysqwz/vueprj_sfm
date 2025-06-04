@@ -549,9 +549,6 @@ class UserService {
 	async updateSubjects(userId, subjects) {
 		try {
 			logger.info(`Обновление предметов для пользователя: ${userId}`)
-			if (!Array.isArray(subjects) || subjects.some(id => !id || typeof id !== 'string')) {
-				throw ApiError.BadRequest('Некорректный список предметов')
-			}
 			await pool.query('BEGIN')
 			await pool.query('DELETE FROM lecturer_subjects WHERE lecturer_id = $1', [userId])
 			for (const subjectId of subjects) {
@@ -579,9 +576,6 @@ class UserService {
 		logger.info(`Обновление групп для пользователя: ${userId}`)
 		try {
 			await pool.query('BEGIN')
-			if (!Array.isArray(groups) || groups.some(id => !id || typeof id !== 'string')) {
-				throw ApiError.BadRequest('Некорректный список групп')
-			}
 			await pool.query('DELETE FROM lecturer_groups WHERE lecturer_id = $1', [userId])
 			for (const groupId of groups) {
 				const groupCheck = await pool.query('SELECT id FROM groups WHERE id = $1', [groupId])
@@ -606,10 +600,6 @@ class UserService {
 
 	async quitSessions(userId) {
 		try {
-			const result = await pool.query(
-				`SELECT id FROM users WHERE id = $1`,
-				[userId]
-			)
 			await pool.query(
 				`UPDATE tokens SET is_revoked = TRUE WHERE user_id = $1`,
 				[userId]
