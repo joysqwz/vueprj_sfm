@@ -25,7 +25,7 @@ class TokenService {
 		try {
 			logger.info(`Генерация temp токена для пользователя: ${payload}`)
 			const tempToken = jwt.sign({ sub: payload }, process.env.JWT_TEMP_SECRET, {
-				expiresIn: '1m'
+				expiresIn: '10m'
 			})
 			logger.info(`Temp токен успешно сгенерирован для пользователя: ${payload}`)
 			return tempToken
