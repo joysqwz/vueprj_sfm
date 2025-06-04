@@ -23,61 +23,56 @@ class TokenService {
 
 	generateTempToken(payload) {
 		try {
-			logger.info(`Генерация temp токена для пользователя: ${payload}`)
+			logger.info(`Генерация temp-токена для пользователя: ${payload}`)
 			const tempToken = jwt.sign({ sub: payload }, process.env.JWT_TEMP_SECRET, {
 				expiresIn: '10m'
 			})
-			logger.info(`Temp токен успешно сгенерирован для пользователя: ${payload}`)
+			logger.info(`Temp-токен успешно сгенерирован для пользователя: ${payload}`)
 			return tempToken
 		} catch (error) {
-			logger.error(`Ошибка при генерации temp токена: ${error.message}`)
+			logger.error(`Ошибка при генерации temp-токена: ${error.message}`)
 			throw ApiError.InternalError()
 		}
 	}
 
 	validateAccessToken(token) {
 		try {
-			logger.info('Попытка валидации access token')
+			logger.info('Попытка валидации access-токена')
 			const userData = jwt.verify(token, process.env.JWT_ACCESS_SECRET)
-			logger.info(`Access token успешно валидирован для пользователя: ${userData.sub}`)
+			logger.info(`Access-токен успешно валидирован для пользователя: ${userData.sub}`)
 			return userData
 		} catch (error) {
-			logger.warn('Ошибка валидации access token')
+			logger.warn('Ошибка валидации access-токена')
 			throw ApiError.UnauthorizedError()
 		}
 	}
 
 	validateRefreshToken(token) {
 		try {
-			logger.info('Попытка валидации refresh token')
+			logger.info('Попытка валидации refresh-токена')
 			const userData = jwt.verify(token, process.env.JWT_REFRESH_SECRET)
-			logger.info(`Refresh token успешно валидирован для пользователя: ${userData.sub}`)
+			logger.info(`Refresh-токен успешно валидирован для пользователя: ${userData.sub}`)
 			return userData
 		} catch (error) {
-			logger.warn('Ошибка валидации refresh token')
+			logger.warn('Ошибка валидации refresh-токена')
 			throw ApiError.UnauthorizedError()
 		}
 	}
 
 	validateTempToken(token) {
 		try {
-			logger.info('Попытка валидации temp token')
+			logger.info('Попытка валидации temp-токена')
 			const userData = jwt.verify(token, process.env.JWT_TEMP_SECRET)
-			logger.info(`temp token успешно валидирован для пользователя: ${userData.sub}`)
+			logger.info(`Temp-токен успешно валидирован для пользователя: ${userData.sub}`)
 			return userData
 		} catch (error) {
-			logger.warn('Ошибка валидации refresh token')
+			logger.warn('Ошибка валидации temp-токена')
 			throw ApiError.UnauthorizedError()
 		}
 	}
 
 	async saveToken(uid, userId, refreshToken, ipAddress, userAgent, jti) {
 		try {
-			const userResult = await pool.query(`SELECT * FROM users WHERE id = $1`, [userId])
-			if (userResult.rows.length === 0) {
-				logger.error(`Пользователь не найден: userId=${userId}`)
-				throw ApiError.BadRequest('Пользователь не найден')
-			}
 			const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
 			const result = await pool.query(
 				`SELECT * FROM tokens WHERE user_id = $1 AND unique_id = $2`,
@@ -91,7 +86,7 @@ class TokenService {
 					 RETURNING *`,
 					[refreshToken, userAgent, ipAddress, expiresAt, userId, uid]
 				)
-				logger.info(`Refresh token обновлён для userId=${userId}, uid=${uid}`)
+				logger.info(`Refresh-токен обновлён для userId=${userId}, uid=${uid}`)
 				return tokenData.rows[0]
 			} else {
 				const token = await pool.query(
@@ -100,21 +95,18 @@ class TokenService {
 					 RETURNING *`,
 					[jti, userId, refreshToken, ipAddress, userAgent, uid, expiresAt]
 				)
-				logger.info(`Refresh token создан для userId=${userId}, uid=${uid}`)
+				logger.info(`Refresh-токен создан для userId=${userId}, uid=${uid}`)
 				return token.rows[0]
 			}
 		} catch (error) {
-			logger.error(`Ошибка при сохранении refresh token: ${error.message}, userId=${userId}, uid=${uid}`)
-			if (error.code === '23505') {
-				throw ApiError.BadRequest('Токен для данной комбинации user_id и unique_id уже существует')
-			}
+			logger.error(`Ошибка при сохранении refresh-токен: ${error.message}, userId=${userId}, uid=${uid}`)
 			throw ApiError.InternalError(error.message)
 		}
 	}
 
 	async removeToken(refreshToken) {
 		try {
-			logger.info('Попытка отзыва refresh token')
+			logger.info('Попытка отзыва refresh-токена')
 			const tokenData = await pool.query(
 				`UPDATE tokens 
                  SET is_revoked = TRUE, expires_at = CURRENT_TIMESTAMP
@@ -123,34 +115,34 @@ class TokenService {
 				[refreshToken]
 			)
 			if (tokenData.rows.length === 0) {
-				logger.warn('Refresh token не найден')
-				throw ApiError.BadRequest('Токен не найден')
+				logger.warn('Refresh-токен не найден')
+				throw ApiError.BadRequest('Refresh-токен не найден')
 			}
-			logger.info(`Refresh token успешно отозван для пользователя: ${tokenData.rows[0].user_id}`)
+			logger.info(`Refresh-токен успешно отозван для пользователя: ${tokenData.rows[0].user_id}`)
 			return
 		} catch (error) {
-			logger.error(`Ошибка при отзыве refresh token: ${error.message}`)
+			logger.error(`Ошибка при отзыве refresh-токена: ${error.message}`)
 			throw error instanceof ApiError ? error : ApiError.InternalError()
 		}
 	}
 
 	async findToken(refreshToken) {
 		try {
-			logger.info('Поиск refresh token в базе данных')
+			logger.info('Поиск refresh-токена в базе данных')
 			const tokenData = await pool.query(
 				`SELECT * FROM tokens 
                  WHERE refresh_token = $1 AND is_revoked = FALSE AND expires_at > CURRENT_TIMESTAMP`,
 				[refreshToken]
 			)
 			if (tokenData.rows.length) {
-				logger.info('Refresh token найден в базе данных')
+				logger.info('Refresh-токен найден в базе данных')
 				return tokenData.rows[0]
 			} else {
-				logger.warn('Refresh token не найден или истек/отозван')
+				logger.warn('Refresh-токен не найден или истек/отозван')
 				return null
 			}
 		} catch (error) {
-			logger.error(`Ошибка при поиске refresh token: ${error.message}`)
+			logger.error(`Ошибка при поиске refresh-токена: ${error.message}`)
 			throw ApiError.InternalError()
 		}
 	}
