@@ -71,7 +71,7 @@ class TokenService {
 		}
 	}
 
-	async saveToken(uid, userId, refreshToken, ipAddress, userAgent, jti) {
+	saveToken(uid, userId, refreshToken, ipAddress, userAgent, jti) {
 		try {
 			const expiresAt = new Date(Date.now() + tokenConfig.JWT_REFRESH * 24 * 60 * 60 * 1000)
 			const result = await pool.query(
@@ -104,7 +104,7 @@ class TokenService {
 		}
 	}
 
-	async removeToken(refreshToken) {
+	removeToken(refreshToken) {
 		try {
 			logger.info('Попытка отзыва refresh-токена')
 			const tokenData = await pool.query(
@@ -114,10 +114,6 @@ class TokenService {
                  RETURNING *`,
 				[refreshToken]
 			)
-			if (tokenData.rows.length === 0) {
-				logger.warn('Refresh-токен не найден')
-				throw ApiError.BadRequest('Refresh-токен не найден')
-			}
 			logger.info(`Refresh-токен успешно отозван для пользователя: ${tokenData.rows[0].user_id}`)
 			return
 		} catch (error) {
@@ -126,7 +122,7 @@ class TokenService {
 		}
 	}
 
-	async findToken(refreshToken) {
+	findToken(refreshToken) {
 		try {
 			logger.info('Поиск refresh-токена в базе данных')
 			const tokenData = await pool.query(
