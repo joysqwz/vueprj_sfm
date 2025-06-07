@@ -35,7 +35,7 @@ class UserService {
 			for (const user of users) {
 				const { first_name, middle_name, last_name, group, role, email } = user
 				const userCheck = await pool.query('SELECT * FROM users WHERE email = $1', [email])
-				if (userCheck.rows.length > 0) {
+				if (userCheck.rows?.length) {
 					throw ApiError.BadRequest(`Пользователь с email ${email} уже существует`)
 				}
 				let newPassword = ''
