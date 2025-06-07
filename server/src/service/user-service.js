@@ -504,7 +504,7 @@ class UserService {
 				}
 				if (userData.group_name) {
 					const groupRes = await pool.query('SELECT id FROM groups WHERE name = $1', [userData.group_name])
-					if (groupRes.rowCount === 0) {
+					if (!groupRes || groupRes.rowCount === 0) {
 						throw ApiError.BadRequest(`Группа с названием "${userData.group_name}" не найдена`)
 					}
 					studentUpdates.push(`group_id = $${studentIndex++}`)
@@ -520,7 +520,7 @@ class UserService {
 			}
 			await pool.query('COMMIT')
 			if (newPassword) {
-				mailService.sendChangePassword(userData.email || currentUser.rows[0].email, userData.email || currentUser.rows[0].email, newPassword, true)
+				mailService.sendChangePassword(userData?.email || currentUser?.rows[0]?.email, userData.email || currentUser?.rows[0]?.email, newPassword, true)
 			}
 			if (userData.email) {
 				mailService.sendChangeEmail(currentUser.rows[0].email, userData.email, true)
@@ -553,7 +553,7 @@ class UserService {
 			await pool.query('DELETE FROM lecturer_subjects WHERE lecturer_id = $1', [userId])
 			for (const subjectId of subjects) {
 				const subjectCheck = await pool.query('SELECT id FROM subjects WHERE id = $1', [subjectId])
-				if (subjectCheck.rows.length === 0) {
+				if (subjectCheck?.rows?.length === 0) {
 					throw ApiError.BadRequest(`Предмет с ID ${subjectId} не найден`)
 				}
 				await pool.query(
