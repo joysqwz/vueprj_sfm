@@ -58,10 +58,4 @@ cron.schedule('0 0 * * *', async () => {
 	} catch (error) {
 		logger.error('[CRON] Ошибка при очистке temp_tokens:', error.message)
 	}
-
-	try {
-		await createBackup()
-	} catch (error) {
-		logger.error('[CRON] Ошибка при создании дампа:', error.message)
-	}
 })
