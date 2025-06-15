@@ -22,7 +22,7 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
--- Name: groups; Type: TABLE; Schema: public; Owner: mega-postgrs
+-- Name: groups; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE public.groups (
@@ -31,10 +31,10 @@ CREATE TABLE public.groups (
 );
 
 
-ALTER TABLE public.groups OWNER TO mega-postgrs;
+ALTER TABLE public.groups OWNER TO postgres;
 
 --
--- Name: lab_files; Type: TABLE; Schema: public; Owner: mega-postgrs
+-- Name: lab_files; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE public.lab_files (
@@ -45,10 +45,10 @@ CREATE TABLE public.lab_files (
 );
 
 
-ALTER TABLE public.lab_files OWNER TO mega-postgrs;
+ALTER TABLE public.lab_files OWNER TO postgres;
 
 --
--- Name: lab_groups; Type: TABLE; Schema: public; Owner: mega-postgrs
+-- Name: lab_groups; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE public.lab_groups (
@@ -57,10 +57,10 @@ CREATE TABLE public.lab_groups (
 );
 
 
-ALTER TABLE public.lab_groups OWNER TO mega-postgrs;
+ALTER TABLE public.lab_groups OWNER TO postgres;
 
 --
--- Name: lab_submission_files; Type: TABLE; Schema: public; Owner: mega-postgrs
+-- Name: lab_submission_files; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE public.lab_submission_files (
@@ -71,10 +71,10 @@ CREATE TABLE public.lab_submission_files (
 );
 
 
-ALTER TABLE public.lab_submission_files OWNER TO mega-postgrs;
+ALTER TABLE public.lab_submission_files OWNER TO postgres;
 
 --
--- Name: lab_submissions; Type: TABLE; Schema: public; Owner: mega-postgrs
+-- Name: lab_submissions; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE public.lab_submissions (
@@ -86,10 +86,10 @@ CREATE TABLE public.lab_submissions (
 );
 
 
-ALTER TABLE public.lab_submissions OWNER TO mega-postgrs;
+ALTER TABLE public.lab_submissions OWNER TO postgres;
 
 --
--- Name: labs; Type: TABLE; Schema: public; Owner: mega-postgrs
+-- Name: labs; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE public.labs (
@@ -102,10 +102,10 @@ CREATE TABLE public.labs (
 );
 
 
-ALTER TABLE public.labs OWNER TO mega-postgrs;
+ALTER TABLE public.labs OWNER TO postgres;
 
 --
--- Name: lecturer_groups; Type: TABLE; Schema: public; Owner: mega-postgrs
+-- Name: lecturer_groups; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE public.lecturer_groups (
@@ -114,10 +114,10 @@ CREATE TABLE public.lecturer_groups (
 );
 
 
-ALTER TABLE public.lecturer_groups OWNER TO mega-postgrs;
+ALTER TABLE public.lecturer_groups OWNER TO postgres;
 
 --
--- Name: lecturer_subjects; Type: TABLE; Schema: public; Owner: mega-postgrs
+-- Name: lecturer_subjects; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE public.lecturer_subjects (
@@ -126,10 +126,10 @@ CREATE TABLE public.lecturer_subjects (
 );
 
 
-ALTER TABLE public.lecturer_subjects OWNER TO mega-postgrs;
+ALTER TABLE public.lecturer_subjects OWNER TO postgres;
 
 --
--- Name: lecturers; Type: TABLE; Schema: public; Owner: mega-postgrs
+-- Name: lecturers; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE public.lecturers (
@@ -140,10 +140,10 @@ CREATE TABLE public.lecturers (
 );
 
 
-ALTER TABLE public.lecturers OWNER TO mega-postgrs;
+ALTER TABLE public.lecturers OWNER TO postgres;
 
 --
--- Name: students; Type: TABLE; Schema: public; Owner: mega-postgrs
+-- Name: students; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE public.students (
@@ -155,10 +155,10 @@ CREATE TABLE public.students (
 );
 
 
-ALTER TABLE public.students OWNER TO mega-postgrs;
+ALTER TABLE public.students OWNER TO postgres;
 
 --
--- Name: subjects; Type: TABLE; Schema: public; Owner: mega-postgrs
+-- Name: subjects; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE public.subjects (
@@ -167,10 +167,10 @@ CREATE TABLE public.subjects (
 );
 
 
-ALTER TABLE public.subjects OWNER TO mega-postgrs;
+ALTER TABLE public.subjects OWNER TO postgres;
 
 --
--- Name: temp_tokens; Type: TABLE; Schema: public; Owner: mega-postgrs
+-- Name: temp_tokens; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE public.temp_tokens (
@@ -182,10 +182,10 @@ CREATE TABLE public.temp_tokens (
 );
 
 
-ALTER TABLE public.temp_tokens OWNER TO mega-postgrs;
+ALTER TABLE public.temp_tokens OWNER TO postgres;
 
 --
--- Name: token; Type: TABLE; Schema: public; Owner: mega-postgrs
+-- Name: token; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE public.token (
@@ -201,10 +201,10 @@ CREATE TABLE public.token (
 );
 
 
-ALTER TABLE public.token OWNER TO mega-postgrs;
+ALTER TABLE public.token OWNER TO postgres;
 
 --
--- Name: users; Type: TABLE; Schema: public; Owner: mega-postgrs
+-- Name: users; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE public.users (
@@ -216,10 +216,10 @@ CREATE TABLE public.users (
 );
 
 
-ALTER TABLE public.users OWNER TO mega-postgrs;
+ALTER TABLE public.users OWNER TO postgres;
 
 --
--- Data for Name: groups; Type: TABLE DATA; Schema: public; Owner: mega-postgrs
+-- Data for Name: groups; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
 COPY public.groups (id, name) FROM stdin;
@@ -230,7 +230,7 @@ bb8bd1de-f50e-49b0-b984-c2e7066e0436	АС-21
 
 
 --
--- Data for Name: lab_files; Type: TABLE DATA; Schema: public; Owner: mega-postgrs
+-- Data for Name: lab_files; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
 COPY public.lab_files (id, lab_id, file_name, file_path) FROM stdin;
@@ -238,7 +238,7 @@ COPY public.lab_files (id, lab_id, file_name, file_path) FROM stdin;
 
 
 --
--- Data for Name: lab_groups; Type: TABLE DATA; Schema: public; Owner: mega-postgrs
+-- Data for Name: lab_groups; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
 COPY public.lab_groups (lab_id, group_id) FROM stdin;
@@ -256,7 +256,7 @@ eabcf0da-f8e5-443a-8923-929365b14727	b99c24f9-8141-400c-8c38-cdb37d3daf5c
 
 
 --
--- Data for Name: lab_submission_files; Type: TABLE DATA; Schema: public; Owner: mega-postgrs
+-- Data for Name: lab_submission_files; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
 COPY public.lab_submission_files (id, lab_submission_id, file_name, file_path) FROM stdin;
@@ -264,7 +264,7 @@ COPY public.lab_submission_files (id, lab_submission_id, file_name, file_path) F
 
 
 --
--- Data for Name: lab_submissions; Type: TABLE DATA; Schema: public; Owner: mega-postgrs
+-- Data for Name: lab_submissions; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
 COPY public.lab_submissions (id, lab_id, student_id, grade, submitted_at) FROM stdin;
