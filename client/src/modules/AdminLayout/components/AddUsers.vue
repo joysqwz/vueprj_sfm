@@ -101,7 +101,7 @@ const addUser = async () => {
     }
     alert(`${response.data.message} ${userData.email}`)
   } catch (error) {
-    alert('Ошибка добавления пользователя: ' + (error?.response?.message || error?.message || error))
+    alert('Ошибка добавления пользователя: ' + (error?.response?.data?.message || error?.response?.message || error?.message || error))
   }
 }
 
