@@ -73,7 +73,11 @@ class UserService {
 		} catch (error) {
 			logger.error(`Ошибка при регистрации пользователей: ${error.message}`)
 			await pool.query('ROLLBACK')
-			throw error instanceof ApiError ? error : ApiError.InternalError()
+			if (error instanceof ApiError) {
+			throw error
+			} else {
+				throw ApiError.InternalError(error.message) 
+			}
 		}
 	}
 
