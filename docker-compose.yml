@@ -21,7 +21,7 @@ services:
       - "5000"
 
   frontend:
-    build: ./frontend
+    build: ./client
     depends_on:
       - backend
 
