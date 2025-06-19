@@ -32,6 +32,7 @@ class UserService {
 
 	async registrationAdmin(users) {
 		try {
+			await pool.query('BEGIN')
 			for (const user of users) {
 				const { first_name, middle_name, last_name, group, role, email } = user
 				const userCheck = await pool.query('SELECT * FROM users WHERE email = $1', [email])
@@ -64,12 +65,14 @@ class UserService {
 						[userId, first_name, middle_name, last_name, group]
 					)
 				}
-				mailService.sendInfoUser(email, email, newPassword)
+				await mailService.sendInfoUser(email, email, newPassword)
 			}
 			logger.info(`Успешно добавлено ${users.length} пользователей`)
+			await pool.query('COMMIT')
 			return
 		} catch (error) {
 			logger.error(`Ошибка при регистрации пользователей: ${error.message}`)
+			await pool.query('ROLLBACK')
 			throw error instanceof ApiError ? error : ApiError.InternalError()
 		}
 	}
