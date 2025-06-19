@@ -114,6 +114,7 @@ class UserService {
 
 	async prepareNewDevice(userId, email) {
 		try {
+			await pool.query('BEGIN')
 			logger.info(`Подтверждение нового устройства пользователя: ${userId}`)
 			const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
 			let code = ''
@@ -128,11 +129,17 @@ class UserService {
 			ON CONFLICT (user_id) 
 			DO UPDATE SET temp_token = EXCLUDED.temp_token, code = EXCLUDED.code, expires_at = EXCLUDED.expires_at
 		`, [userId, tempToken, code])
-			mailService.sendNewDeviceCode(email, code)
+			await mailService.sendNewDeviceCode(email, code)
+			await pool.query('COMMIT')
 			return tempToken
 		} catch (error) {
 			logger.error(`Ошибка при подтверждении нового устройства: ${error.message}`)
-			throw error instanceof ApiError ? error : ApiError.InternalError()
+			await pool.query('ROLLBACK')
+			if (error instanceof ApiError) {
+			throw error
+			} else {
+				throw ApiError.InternalError(error.message) 
+			}
 		}
 	}
 
@@ -162,6 +169,7 @@ class UserService {
 
 	async changePassword(userId, currentPassword, newPassword) {
 		try {
+			await pool.query('BEGIN')
 			logger.info(`Смена пароля для пользователя: ${userId}`)
 			const user = await pool.query('SELECT * FROM users WHERE id = $1', [userId])
 			const isPassValid = await bcrypt.compare(currentPassword, user.rows[0].password)
@@ -173,17 +181,25 @@ class UserService {
 				`UPDATE users SET password = $1 WHERE id = $2`,
 				[hashedPassword, userId]
 			)
-			mailService.sendChangePassword(user.rows[0].email, user.rows[0].email, newPassword, false)
+			await mailService.sendChangePassword(user.rows[0].email, user.rows[0].email, newPassword, false)
+			await pool.query('COMMIT')
 			logger.info(`Пароль успешно изменен для пользователя: ${userId}`)
 			return
 		} catch (error) {
 			logger.error(`Ошибка при смене пароля: ${error.message}`)
-			throw error instanceof ApiError ? error : ApiError.InternalError()
+			await pool.query('ROLLBACK')
+			if (error instanceof ApiError) {
+			throw error
+			} else {
+				throw ApiError.InternalError(error.message) 
+			}
+
 		}
 	}
 
 	async changeEmail(userId, currentEmail, newEmail) {
 		try {
+			await pool.query('BEGIN')
 			logger.info(`Смена email для пользователя: ${userId}`)
 			const user = await pool.query('SELECT * FROM users WHERE id = $1', [userId])
 			if (user.rows[0].email !== currentEmail) {
@@ -197,12 +213,18 @@ class UserService {
 				`UPDATE users SET email = $1 WHERE id = $2`,
 				[newEmail, userId]
 			)
-			mailService.sendChangeEmail(currentEmail, newEmail, false)
+			await mailService.sendChangeEmail(currentEmail, newEmail, false)
 			logger.info(`Email успешно изменён для пользователя: ${userId}`)
+			await pool.query('COMMIT')
 			return
 		} catch (error) {
 			logger.error(`Ошибка при смене email: ${error.message}`)
-			throw error instanceof ApiError ? error : ApiError.InternalError()
+			await pool.query('ROLLBACK')
+			if (error instanceof ApiError) {
+			throw error
+			} else {
+				throw ApiError.InternalError(error.message) 
+			}
 		}
 	}
 
@@ -525,19 +547,25 @@ class UserService {
 					)
 				}
 			}
-			await pool.query('COMMIT')
 			if (newPassword) {
-				mailService.sendChangePassword(userData?.email || currentUser?.rows[0]?.email, userData.email || currentUser?.rows[0]?.email, newPassword, true)
+				await mailService.sendChangePassword(userData?.email || currentUser?.rows[0]?.email, userData.email || currentUser?.rows[0]?.email, newPassword, true)
 			}
 			if (userData.email) {
-				mailService.sendChangeEmail(currentUser.rows[0].email, userData.email, true)
+				await mailService.sendChangeEmail(currentUser.rows[0].email, userData.email, true)
 			}
 			logger.info(`Пользователь успешно обновлён: ${id}`)
+			await pool.query('COMMIT')
 			return
 		} catch (error) {
 			await pool.query('ROLLBACK')
 			logger.error(`Ошибка при обновлении пользователя: ${error.message}`)
-			throw error instanceof ApiError ? error : ApiError.InternalError()
+			await pool.query('ROLLBACK')
+			if (error instanceof ApiError) {
+			throw error
+			} else {
+				throw ApiError.InternalError(error.message) 
+			}
+
 		}
 	}
 
