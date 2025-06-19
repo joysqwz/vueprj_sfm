@@ -9,47 +9,15 @@ class MailService {
 			host: 'smtp.mail.ru',
 			port: 465,
 			secure: true,
-			pool: true,
-			maxConnections: 5,
-			rateLimit: 1,
 			auth: {
 				user: process.env.SMTP_USER || '',
 				pass: process.env.SMTP_PASSWORD || ''
 			}
 		})
-
-		this.queue = []
-		this.sending = false
-		this.delay = 500
 	}
 
-	addToQueue(mailOptions) {
-		this.queue.push(mailOptions)
-		this.processQueue()
-	}
-
-	async processQueue() {
-		if (this.sending || this.queue.length === 0) return
-		this.sending = true
-
-		while (this.queue.length > 0) {
-			const mail = this.queue.shift()
-
-			try {
-				await this.transporter.sendMail(mail)
-				logger.info(`Письмо успешно отправлено на: ${mail.to}`)
-			} catch (err) {
-				logger.error(`Ошибка отправки письма на ${mail.to}: ${err.message}`)
-			}
-
-			await new Promise(res => setTimeout(res, this.delay))
-		}
-
-		this.sending = false
-	}
-
-	sendInfoUser(to, email, password) {
-		this.addToQueue({
+	async sendInfoUser(to, email, password) {
+		const mailOptions = {
 			from: `"СУЛБ" <${process.env.SMTP_USER}>`,
 			to,
 			subject: `Информация о аккаунте`,
@@ -59,15 +27,24 @@ class MailService {
 					<p style="font-size: 18px; margin: 0;">Логин: ${email}</p>
 					<p style="font-size: 18px; margin: 0;">Пароль: ${password}</p>
 					<p style="font-size: 12px; margin-top: 10px; color: #ccc !important;">
-					<a href="https://vueprj-sfmeied.ru" target="_blank" rel="noopener noreferrer" style="color: #ddd !important; text-decoration: none !important; ">vueprj-sfmeied.ru</a>
+						<a href="https://vueprj-sfmeied.ru" target="_blank" rel="noopener noreferrer" style="color: #ddd !important; text-decoration: none !important;">vueprj-sfmeied.ru</a>
 					</p>
 				</div>
 			`,
-		})
+		}
+
+		try {
+			await this.transporter.sendMail(mailOptions)
+			logger.info(`Письмо успешно отправлено на: ${to}`)
+		} catch (err) {
+			logger.error(`Ошибка отправки письма на ${to}: ${err.message}`)
+			throw err
+		}
 	}
 
-	sendChangePassword(to, email, newPassword, isAdmin) {
-		this.addToQueue({
+	// Аналогично можно сделать и другие методы:
+	async sendChangePassword(to, email, newPassword, isAdmin) {
+		const mailOptions = {
 			from: `"СУЛБ" <${process.env.SMTP_USER}>`,
 			to,
 			subject: `Изменение пароля`,
@@ -77,63 +54,19 @@ class MailService {
 					<p style="font-size: 18px; margin: 0;">Новый пароль: ${newPassword}</p>
 					${isAdmin ? '<p style="font-size: 16px; color: #888;">Пароль был изменён администратором</p>' : ''}
 					<p style="font-size: 12px; margin-top: 10px; color: #ccc !important;">
-					<a href="https://vueprj-sfmeied.ru" target="_blank" rel="noopener noreferrer" style="color: #ddd !important; text-decoration: none !important; ">vueprj-sfmeied.ru</a>
+						<a href="https://vueprj-sfmeied.ru" target="_blank" rel="noopener noreferrer" style="color: #ddd !important; text-decoration: none !important;">vueprj-sfmeied.ru</a>
 					</p>
 				</div>
-			`,
-		})
-	}
+			`
+		}
 
-
-	sendChangeEmail(to, newEmail, isAdmin) {
-		const maskedEmail = this.maskEmail(newEmail)
-
-		this.addToQueue({
-			from: `"СУЛБ" <${process.env.SMTP_USER}>`,
-			to,
-			subject: `Изменение почты`,
-			html: `
-				<div>
-					<p style="font-size: 18px; margin: 0;">Новая почта: ${maskedEmail}</p>
-					${isAdmin ? '<p style="font-size: 16px; color: #888;">Почта была изменена администратором</p>' : ''}
-					<p style="font-size: 12px; margin-top: 10px; color: #ccc !important;">
-					<a href="https://vueprj-sfmeied.ru" target="_blank" rel="noopener noreferrer" style="color: #ddd !important; text-decoration: none !important; ">vueprj-sfmeied.ru</a>
-					</p>
-				</div>
-			`,
-		})
-
-		this.addToQueue({
-			from: `"СУЛБ" <${process.env.SMTP_USER}>`,
-			to: newEmail,
-			subject: `Изменение почты`,
-			html: `
-				<div>
-					<h1>Активирована новая почта для вашего аккаунта</h1>
-					${isAdmin ? '<p style="font-size: 16px; color: #888;">Почта была изменена администратором</p>' : ''}
-					<p style="font-size: 12px; margin-top: 10px; color: #ccc !important;">
-					<a href="https://vueprj-sfmeied.ru" target="_blank" rel="noopener noreferrer" style="color: #ddd !important; text-decoration: none !important; ">vueprj-sfmeied.ru</a>
-					</p>
-				</div>
-			`,
-		})
-	}
-
-
-	sendNewDeviceCode(to, code) {
-		this.addToQueue({
-			from: `"СУЛБ" <${process.env.SMTP_USER}>`,
-			to,
-			subject: `Подтверждение входа`,
-			html: `
-				<div>
-					<p style="font-size: 18px; margin: 0;">Введите код подтверждения: ${code}</p>
-					<p style="font-size: 12px; margin-top: 10px; color: #ccc !important;">
-					<a href="https://vueprj-sfmeied.ru" target="_blank" rel="noopener noreferrer" style="color: #ddd !important; text-decoration: none !important; ">vueprj-sfmeied.ru</a>
-					</p>
-				</div>
-			`,
-		})
+		try {
+			await this.transporter.sendMail(mailOptions)
+			logger.info(`Пароль отправлен на почту: ${to}`)
+		} catch (err) {
+			logger.error(`Ошибка при отправке письма смены пароля на ${to}: ${err.message}`)
+			throw err
+		}
 	}
 
 	maskEmail(email) {
@@ -147,7 +80,6 @@ class MailService {
 
 		return `${maskedLocal}@${maskedDomain}`
 	}
-
 }
 
 export default new MailService()
