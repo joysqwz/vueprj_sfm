@@ -15,7 +15,7 @@ class MailService {
 			}
 		})
 
-		this.timeoutMs = 10000 // Таймаут: 10 секунд
+		this.timeoutMs = 5000 // Таймаут: 5 секунд
 	}
 
 	async sendMailWithTimeout(mailOptions) {
