@@ -5,7 +5,7 @@
         <div class="user-profile__field-inner">
           <div class="user-profile__fio">
             <span class="user-profile__fio-label label-style">Фамилия</span>
-            <span class="user-profile__fio-value">{{ userInfo.middle_name }}</span>
+            <span class="user-profile__fio-value">{{ userInfo.last_name }}</span>
           </div>
           <div class="user-profile__fio">
             <span class="user-profile__fio-label label-style">Имя</span>
@@ -13,7 +13,7 @@
           </div>
           <div class="user-profile__fio">
             <span class="user-profile__fio-label label-style">Отчество</span>
-            <span class="user-profile__fio-value">{{ userInfo.last_name }}</span>
+            <span class="user-profile__fio-value">{{ userInfo.middle_name }}</span>
           </div>
         </div>
       </div>
